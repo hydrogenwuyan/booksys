@@ -5,5 +5,5 @@ const (
 )
 
 func Init() {
-	AdminDaoEntity.Init(database)
+	AdminDaoEntity = NewAdminDao(database)
 }

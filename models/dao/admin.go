@@ -6,7 +6,7 @@ import (
 )
 
 type AdminDao struct {
-	orm orm.Ormer
+	orm  orm.Ormer
 	name string
 }
 
@@ -14,8 +14,8 @@ var (
 	AdminDaoEntity *AdminDao
 )
 
-func (dao *AdminDao) Init(name string) {
-	AdminDaoEntity = &AdminDao{}
+func NewAdminDao(name string) (dao *AdminDao) {
+	dao = &AdminDao{}
 	dao.name = name
 	o := common.GetOrm(name)
 	if o == nil {
@@ -23,4 +23,5 @@ func (dao *AdminDao) Init(name string) {
 	}
 
 	dao.orm = o
+	return
 }
