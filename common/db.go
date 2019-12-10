@@ -95,7 +95,7 @@ var (
 	dbOrms map[string]orm.Ormer
 )
 
-func Init() (err error) {
+func DBInit() (err error) {
 	dbOrms = make(map[string]orm.Ormer)
 	err = dbInit()
 	return

@@ -2,17 +2,17 @@ package entity
 
 // 学生数据
 type StudentEntity struct {
-	Id          int64  `orm:"column(id);pk" json:"id,omitempty"`
-	User        string `orm:"column(user);pk" json:"user,omitempty"`
-	Password    string `orm:"column(password);pk" json:"password,omitempty"`
-	Sex         int8   `orm:"column(sex);pk" json:"sex,omitempty"`
-	Age         int32  `orm:"column(age);pk" json:"age,omitempty"`
-	Phone       int32  `orm:"column(phone);pk" json:"phone,omitempty"`
-	Name        string `orm:"column(name);pk" json:"name,omitempty"`
-	BorrowBooks string `orm:"column(borrowBooks);pk" json:"borrowBooks,omitempty"`
-	CreateTime  int64  `orm:"column(createTime)" json:"createTime,omitempty"`
-	UpdateTime  int64  `orm:"column(updateTime)" json:"updateTime,omitempty"`
-	DeleteTime  int64  `orm:"column(deleteTime)" json:"deleteTime,omitempty"`
+	Id         int64  `orm:"column(id);pk" json:"id,omitempty"`
+	User       string `orm:"column(user);pk" json:"user,omitempty"`
+	Password   string `orm:"column(password);pk" json:"password,omitempty"`
+	Sex        int8   `orm:"column(sex);pk" json:"sex,omitempty"`
+	Age        int32  `orm:"column(age);pk" json:"age,omitempty"`
+	Phone      int32  `orm:"column(phone);pk" json:"phone,omitempty"`
+	Name       string `orm:"column(name);pk" json:"name,omitempty"`
+	BorrowInfo string `orm:"column(borrowInfo);pk" json:"borrowInfo,omitempty"`
+	CreateTime int64  `orm:"column(createTime)" json:"createTime,omitempty"`
+	UpdateTime int64  `orm:"column(updateTime)" json:"updateTime,omitempty"`
+	DeleteTime int64  `orm:"column(deleteTime)" json:"deleteTime,omitempty"`
 }
 
 func (e *StudentEntity) TableName() string {
