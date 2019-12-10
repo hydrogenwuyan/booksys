@@ -5,10 +5,10 @@ import (
 	"github.com/go-redis/redis"
 )
 
-var redisClient *redis.Client
+var RedisClient *redis.Client
 
 func RedisInit() (err error) {
-	redisClient = redis.NewClient(&redis.Options{
+	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     beego.AppConfig.String("redis::host") + ":" + beego.AppConfig.String("redis::port"),
 		Password: beego.AppConfig.String("redis::auth"),
 		DB:       0, // use default DB
