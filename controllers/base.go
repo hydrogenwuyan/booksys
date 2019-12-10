@@ -8,6 +8,10 @@ import (
 	. "project/booksys/error_code"
 )
 
+const (
+	TokenKey = "token"
+)
+
 type BaseController struct {
 	beego.Controller
 }

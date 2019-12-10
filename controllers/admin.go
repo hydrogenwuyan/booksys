@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	. "project/booksys/error_code"
 	"project/booksys/models/dao"
+	"project/booksys/utils/tokenutils"
 	"regexp"
 )
 
@@ -45,7 +47,41 @@ func (c *AdminControllers) Login() {
 		return
 	}
 
+	// 设置token
+	flag := false
+	status := tokenutils.CheckTokenSignature(fmt.Sprint(adminEntity.Id))
+	if status == tokenutils.TokenOk {
+		flag = true
+	}
 
+	var token string
+	if !flag {
+		token, err = tokenutils.GenerateToken(adminEntity.Id)
+		if err != nil {
+			c.ErrorResponse(ERROR_CODE_GENERATE_TOKEN_FAIL)
+			return
+		}
+	}
 
-	c.SuccessResponse(adminEntity)
+	c.Ctx.SetCookie(TokenKey, token, tokenutils.AccessTokenExpiredSecs)
+
+	type respMsg struct {
+		Id    int64  `json:"id"`
+		User  string `json:"user"`
+		Sex   int8   `json:"sex"`
+		Age   int32  `json:"age"`
+		Phone int32  `json:"phone"`
+		Name  string `json:"name"`
+	}
+
+	resp := &respMsg{
+		Id:    adminEntity.Id,
+		User:  adminEntity.User,
+		Sex:   adminEntity.Sex,
+		Age:   adminEntity.Age,
+		Phone: adminEntity.Phone,
+		Name:  adminEntity.Name,
+	}
+
+	c.SuccessResponse(resp)
 }
