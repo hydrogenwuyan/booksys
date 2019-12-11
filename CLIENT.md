@@ -47,6 +47,3 @@
 | age        | true     | int | 年龄                          |           |
 | phone     | true     | string    | 手机号                      |          |
 | name     | true     | string    | 名字                      |          |
-
-
-
