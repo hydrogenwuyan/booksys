@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	. "project/booksys/error_code"
 	"project/booksys/models/dao"
 	"project/booksys/utils/tokenutils"
@@ -21,17 +22,23 @@ type adminControllersLoginReq struct {
 // 登陆
 func (c *AdminControllers) Login() {
 	msg := &adminControllersLoginReq{}
-	c.GetPost(msg)
+	err := c.GetPost(msg)
+	if err != nil {
+		fmt.Println(*msg)
+		return
+	}
 
 	// 过滤数据
-	reg := regexp.MustCompile(`^[a-zA-Z0-9]`)
+	reg := regexp.MustCompile(`[^a-zA-Z0-9]+`)
 	userErr := reg.FindAllString(msg.User, -1)
 	if len(userErr) != 0 {
+		logs.Error("userErr: ", userErr)
 		c.ErrorResponse(ERROR_CODE_USER_NAME_ERROR)
 		return
 	}
 	passErr := reg.FindAllString(msg.Password, -1)
 	if len(passErr) != 0 {
+		logs.Error("passErr: ", userErr)
 		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
 		return
 	}
@@ -69,8 +76,8 @@ func (c *AdminControllers) Login() {
 		Id    int64  `json:"id"`
 		User  string `json:"user"`
 		Sex   int8   `json:"sex"`
-		Age   int32  `json:"age"`
-		Phone int32  `json:"phone"`
+		Age   int8  `json:"age"`
+		Phone string  `json:"phone"`
 		Name  string `json:"name"`
 	}
 

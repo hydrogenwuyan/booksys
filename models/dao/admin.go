@@ -23,7 +23,7 @@ func NewAdminDao(name string) (dao *AdminDao) {
 	if o == nil {
 		panic("orm应该不为空")
 	}
-
+	
 	dao.orm = o
 	return
 }

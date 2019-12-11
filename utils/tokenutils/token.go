@@ -9,8 +9,11 @@ import (
 	"time"
 )
 
+var (
+	SECRET_KEY = []byte("book management system")
+)
+
 const (
-	SECRET_KEY             = "book management system"
 	AccessTokenExpiredSecs = 3600 // 过期时间
 )
 
@@ -21,12 +24,20 @@ const (
 	TokenParseFail        //token解析失败
 )
 
+type Claims struct {
+	UserId int64 `json:"UserId"`
+	jwt.StandardClaims
+}
+
 // 获取token
 func GenerateToken(id int64) (token string, err error) {
-	claims := jwt.StandardClaims{
-		Id:        fmt.Sprint(id),
-		NotBefore: int64(time.Now().Unix()),
-		ExpiresAt: int64(time.Now().Unix() + AccessTokenExpiredSecs),
+	claims := Claims{
+		id,
+		jwt.StandardClaims{
+			Id:        fmt.Sprint(id),
+			NotBefore: int64(time.Now().Unix()),
+			ExpiresAt: int64(time.Now().Unix() + AccessTokenExpiredSecs),
+		},
 	}
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -93,7 +104,7 @@ func CheckTokenSignature(id string) uint8 {
 	tokenKey := TokenKey(id)
 	err := common.RedisClient.Get(tokenKey).Err()
 	if err != nil {
-		log.Error("redis get tokenkey fail, error: %v", err)
+		//log.Error("redis get tokenkey fail, error: %v", err)
 		return TokenExpired
 	}
 

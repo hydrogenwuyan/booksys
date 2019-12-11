@@ -3,11 +3,11 @@ package entity
 // 图书数据
 type BookEntity struct {
 	Id         int64  `orm:"column(id);pk" json:"id,omitempty"`
-	IsBorrow   int8   `orm:"column(isBorrow);pk" json:"isBorrow,omitempty"`
-	Type       int32  `orm:"column(type);pk" json:"type,omitempty"`
-	Name       string `orm:"column(name);pk" json:"name,omitempty"`
-	Author     string `orm:"column(author);pk" json:"author,omitempty"`
-	Press      string `orm:"column(press);pk" json:"press,omitempty"`
+	IsBorrow   int8   `orm:"column(isBorrow)" json:"isBorrow,omitempty"`
+	Type       int32  `orm:"column(type)" json:"type,omitempty"`
+	Name       string `orm:"column(name)" json:"name,omitempty"`
+	Author     string `orm:"column(author)" json:"author,omitempty"`
+	Press      string `orm:"column(press)" json:"press,omitempty"`
 	CreateTime int64  `orm:"column(createTime)" json:"createTime,omitempty"`
 	UpdateTime int64  `orm:"column(updateTime)" json:"updateTime,omitempty"`
 	DeleteTime int64  `orm:"column(deleteTime)" json:"deleteTime,omitempty"`

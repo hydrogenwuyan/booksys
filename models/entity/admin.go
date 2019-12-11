@@ -3,12 +3,12 @@ package entity
 // 管理员数据
 type AdminEntity struct {
 	Id         int64  `orm:"column(id);pk" json:"id,omitempty"`
-	User       string `orm:"column(user);pk" json:"user,omitempty"`
-	Password   string `orm:"column(password);pk" json:"password,omitempty"`
-	Sex        int8   `orm:"column(sex);pk" json:"sex,omitempty"`
-	Age        int32  `orm:"column(age);pk" json:"age,omitempty"`
-	Phone      int32  `orm:"column(phone);pk" json:"phone,omitempty"`
-	Name       string `orm:"column(name);pk" json:"name,omitempty"`
+	User       string `orm:"column(user)" json:"user,omitempty"`
+	Password   string `orm:"column(password)" json:"password,omitempty"`
+	Sex        int8   `orm:"column(sex)" json:"sex,omitempty"`
+	Age        int8  `orm:"column(age)" json:"age,omitempty"`
+	Phone      string  `orm:"column(phone)" json:"phone,omitempty"`
+	Name       string `orm:"column(name)" json:"name,omitempty"`
 	CreateTime int64  `orm:"column(createTime)" json:"createTime,omitempty"`
 	UpdateTime int64  `orm:"column(updateTime)" json:"updateTime,omitempty"`
 	DeleteTime int64  `orm:"column(deleteTime)" json:"deleteTime,omitempty"`

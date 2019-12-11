@@ -1,0 +1,62 @@
+{
+  "info": {
+    "_postman_id": "c90d42be-f909-4dee-be15-98c58f4d4d25",
+    "name": "book_sys",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "图书管理系统-管理员",
+      "item": [
+        {
+          "name": "登陆",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "description": "web",
+                "key": "type",
+                "type": "text",
+                "value": "web"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"user\":\"root\",\n\"password\":\"root\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/v1/admin/login",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "login"
+              ],
+              "query": [
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "protocolProfileBehavior": {},
+      "_postman_isSubFolder": true
+    }
+  ]
+}
