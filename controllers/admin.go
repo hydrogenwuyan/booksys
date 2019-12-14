@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"project/booksys/common"
 	. "project/booksys/error_code"
 	"project/booksys/models/dao"
-	"project/booksys/utils/tokenutils"
 	"regexp"
 )
 
@@ -32,13 +31,13 @@ func (c *AdminControllers) Login() {
 	reg := regexp.MustCompile(`[^a-zA-Z0-9]+`)
 	userErr := reg.FindAllString(msg.User, -1)
 	if len(userErr) != 0 {
-		logs.Error("userErr: ", userErr)
+		common.LogFuncError("userErr: %v", userErr)
 		c.ErrorResponse(ERROR_CODE_USER_NAME_ERROR)
 		return
 	}
 	passErr := reg.FindAllString(msg.Password, -1)
 	if len(passErr) != 0 {
-		logs.Error("passErr: ", userErr)
+		common.LogFuncError("passErr: %v", passErr)
 		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
 		return
 	}
@@ -55,22 +54,11 @@ func (c *AdminControllers) Login() {
 	}
 
 	// 设置token
-	flag := false
-	status := tokenutils.CheckTokenSignature(fmt.Sprint(adminEntity.Id))
-	if status == tokenutils.TokenOk {
-		flag = true
+	errCode := c.SetToken(adminEntity.Id)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
 	}
-
-	var token string
-	if !flag {
-		token, err = tokenutils.GenerateToken(adminEntity.Id)
-		if err != nil {
-			c.ErrorResponse(ERROR_CODE_GENERATE_TOKEN_FAIL)
-			return
-		}
-	}
-
-	c.Ctx.SetCookie(TokenKey, token, tokenutils.AccessTokenExpiredSecs)
 
 	type respMsg struct {
 		Id    int64  `json:"id"`
@@ -91,4 +79,9 @@ func (c *AdminControllers) Login() {
 	}
 
 	c.SuccessResponse(resp)
+}
+
+// 填写个人信息
+func (c *AdminControllers) MyInfo() {
+
 }

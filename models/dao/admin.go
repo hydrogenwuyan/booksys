@@ -2,7 +2,6 @@ package dao
 
 import (
 	"github.com/astaxie/beego/orm"
-	"github.com/siddontang/go/log"
 	"project/booksys/common"
 	"project/booksys/models/entity"
 )
@@ -36,7 +35,7 @@ func (dao *AdminDao) Fetch(user string, pass string) (e *entity.AdminEntity, err
 			err = nil
 			return
 		}
-		log.Error("AdminDao Fetch, error: ", err)
+		common.LogFuncError("AdminDao Fetch, error: %v", err)
 		return
 	}
 

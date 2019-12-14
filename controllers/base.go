@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
+	"project/booksys/common"
 	. "project/booksys/error_code"
+	"project/booksys/utils/tokenutils"
 )
 
 const (
@@ -19,7 +20,7 @@ type BaseController struct {
 func (c *BaseController) GetPost(reqData interface{}) (err error) {
 	err = json.Unmarshal(c.Ctx.Input.RequestBody, reqData)
 	if err != nil {
-		logs.Error("BaseController GetPost Unmarshal Fail, error: ", err)
+		common.LogFuncError("BaseController GetPost Unmarshal Fail, error: %v", err)
 		return
 	}
 	return
@@ -29,7 +30,7 @@ func (c *BaseController) GetPost(reqData interface{}) (err error) {
 func (c *BaseController) SuccessResponseWithoutData() {
 	err := c.Ctx.Output.Body([]byte(fmt.Sprintf("{\"code\":%d}", ERROR_CODE_SUCCESS)))
 	if err != nil {
-		logs.Error("BaseController SuccessResponseWithoutData, error: ", err)
+		common.LogFuncError("BaseController SuccessResponseWithoutData Fail, error: %v", err)
 	}
 }
 
@@ -43,7 +44,7 @@ func (c *BaseController) SuccessResponse(result interface{}) {
 
 	err := c.Ctx.Output.JSON(params, false, false)
 	if err != nil {
-		logs.Error("BaseController SuccessResponse, error: ", err)
+		common.LogFuncError("BaseController SuccessResponse Fail, error: %v", err)
 	}
 }
 
@@ -52,6 +53,58 @@ func (c *BaseController) ErrorResponse(errCode ERROR_CODE) {
 	msg := errCode.String()
 	err := c.Ctx.Output.Body([]byte(fmt.Sprintf("{\"code\":%d, \"msg\":\"%s\"}", errCode, msg)))
 	if err != nil {
-		logs.Error("BaseController SuccessResponse, error: ", err)
+		common.LogFuncError("BaseController ErrorResponse Fail, error: %v", err)
+	}
+}
+
+
+// 设置token
+func (c *BaseController) SetToken(id int64)(errCode ERROR_CODE) {
+	errCode = ERROR_CODE_SUCCESS
+	token, err := tokenutils.GenerateToken(id)
+	if err != nil {
+		errCode = ERROR_CODE_GENERATE_TOKEN_FAIL
+		return
+	}
+
+	err = tokenutils.SetToken(id, token)
+	if err != nil {
+		errCode = ERROR_CODE_SET_TOKEN_FAIL
+		return
+	}
+
+	c.Ctx.SetCookie(TokenKey, token, tokenutils.AccessTokenExpiredSecs)
+	return
+}
+
+// 解析token
+func (c *BaseController) ParseToken() (id int64, errCode ERROR_CODE) {
+	errCode = ERROR_CODE_SUCCESS
+	token := c.Ctx.GetCookie(TokenKey)
+	result, id := tokenutils.CheckAndParseToken(token)
+	if result != tokenutils.TokenOk {
+		errCode = ERROR_CODE_TOKEN_EXPIRED
+		return
+	}
+
+	return
+}
+
+// 清理cookie
+func (c *BaseController) ClearCookieToken() {
+	ok := tokenutils.ClearToken(c.Ctx.GetCookie(TokenKey))
+	if !ok {
+		common.LogFuncError("ClearToken Fail")
+	}
+
+	c.Ctx.SetCookie(TokenKey, "", -1)
+}
+
+// 清理token
+func (c *BaseController) ClearToken() {
+	token := c.Ctx.GetCookie(TokenKey)
+	ok := tokenutils.ClearToken(token)
+	if !ok {
+		common.LogFuncError("ClearToken Fail")
 	}
 }

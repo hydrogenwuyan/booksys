@@ -3,7 +3,6 @@ package tokenutils
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/siddontang/go/log"
 	"project/booksys/common"
 	"strconv"
 	"time"
@@ -43,7 +42,7 @@ func GenerateToken(id int64) (token string, err error) {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err = t.SignedString(SECRET_KEY)
 	if err != nil {
-		log.Error("generate access_token failed : %v", err)
+		common.LogFuncError("generate access_token failed : %v", err)
 		return
 	}
 	return
@@ -51,20 +50,24 @@ func GenerateToken(id int64) (token string, err error) {
 
 // 设置token
 func SetToken(id int64, token string) (err error) {
-	err = common.RedisClient.Set(TokenKey(fmt.Sprint(id)), token, time.Second*time.Duration(AccessTokenExpiredSecs)).Err()
+	err = common.RedisClient.Set(tokenKey(fmt.Sprint(id)), token, time.Second*time.Duration(AccessTokenExpiredSecs)).Err()
 	if err != nil {
-		log.Error("redis set token fail, error: ", err)
+		common.LogFuncError("redis set token fail, error: %v", err)
 		return
 	}
 
-	log.Debug("token[%s] : %s", TokenKey(fmt.Sprint(id)), token)
-
+	common.LogFuncDebug("token[%s] : %s", tokenKey(fmt.Sprint(id)), token)
 	return
 }
 
-// 检查token
-func CheckToken(token string) (result uint8, id int64) {
-	t, err := ParseToken(token)
+// 检查解析token
+func CheckAndParseToken(token string) (result uint8, id int64) {
+	return checkAndParseToken(token)
+}
+
+// 检查解析token
+func checkAndParseToken(token string) (result uint8, id int64) {
+	t, err := parseToken(token)
 	if err != nil {
 		result = TokenParseFail
 		return
@@ -74,34 +77,53 @@ func CheckToken(token string) (result uint8, id int64) {
 	var claims *jwt.StandardClaims
 	if claims, ok = t.Claims.(*jwt.StandardClaims); ok && t.Valid {
 		if claims.Id == "" {
-			log.Error("req token.id == 0, there must be something wrong with token.")
+			common.LogFuncError("req token.id == 0, there must be something wrong with token.")
 			result = TokenParseFail
 			return
 		}
-		//check if token equals to cached token
-		result = CheckTokenSignature(claims.Id)
+
+		result = checkTokenExpired(claims.Id)
 		if result != TokenOk {
-			log.Error("CheckTokenSignature fail uid:%v, result:%v", claims.Id, result)
+			common.LogFuncError("checkToken Expired, uid:%v, result:%v", claims.Id, result)
+			return
 		}
 
 		idInt, err := strconv.Atoi(claims.Id)
 		if err != nil {
-			log.Error("CheckToken Id Atoi Fail, error: ", err)
+			result = TokenParseFail
+			common.LogFuncError("CheckToken Id Atoi Fail, error: ", err)
 			return
 		}
 		id = int64(idInt)
 		return
 	} else {
 		result = TokenParseFail
-		log.Error("parse token failed : %v", err)
+		common.LogFuncError("parse token failed : %v", err)
 		return
 	}
 
 }
 
-func CheckTokenSignature(id string) uint8 {
+// 清理token
+func ClearToken(token string) bool{
+	result, id := CheckAndParseToken(token)
+	if result != TokenOk {
+		return false
+	}
+
+	key := tokenKey(fmt.Sprint(id))
+	err := common.RedisClient.Del(key).Err()
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+// 检查token是否过去
+func checkTokenExpired(id string) uint8 {
 	//get cached token.
-	tokenKey := TokenKey(id)
+	tokenKey := tokenKey(id)
 	err := common.RedisClient.Get(tokenKey).Err()
 	if err != nil {
 		//log.Error("redis get tokenkey fail, error: %v", err)
@@ -111,20 +133,20 @@ func CheckTokenSignature(id string) uint8 {
 	return TokenOk
 }
 
-func ParseToken(tokenStr string) (t *jwt.Token, err error) {
+func parseToken(tokenStr string) (t *jwt.Token, err error) {
 	claims := &jwt.StandardClaims{}
 	t, err = jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
 		return SECRET_KEY, nil
 	})
 
 	if err != nil {
-		log.Error("parse token [%s] failed ： %v", tokenStr, err)
+		common.LogFuncError("parse token [%s] failed ： %v", tokenStr, err)
 		return
 	}
 
 	return
 }
 
-func TokenKey(id string) string {
+func tokenKey(id string) string {
 	return fmt.Sprintf("booksys.%s", id)
 }

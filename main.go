@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/siddontang/go/log"
 	"project/booksys/common"
 	"project/booksys/models/dao"
 	_ "project/booksys/models/entity"
@@ -11,11 +11,14 @@ import (
 )
 
 func main() {
+	// 初始化日志
+	common.LogInit()
+
 	// 初始化数据库连接
 	orm.Debug = true
 	err := common.DBInit()
 	if err != nil {
-		log.Error("连接数据库出错, error: ", err)
+		common.LogFuncError("连接数据库出错, error: %v", err)
 		return
 	}
 
@@ -25,5 +28,13 @@ func main() {
 	//初始化redis服务
 	common.RedisInit()
 
-	beego.Run("127.0.0.1:12019")
+	// 开启http服务
+	startHttpServer()
+}
+
+func startHttpServer() {
+	host := "127.0.0.1"
+	port := beego.AppConfig.String("httpport")
+	addr := fmt.Sprintf("%s:%s", host, port)
+	beego.Run(addr)
 }

@@ -35,7 +35,7 @@ func dbInit() (err error) {
 		}
 		config.Name = "default"
 
-		if _, err = RegisterOrm(config); err != nil {
+		if _, err = registerOrm(config); err != nil {
 			return
 		}
 	}
@@ -52,7 +52,7 @@ func dbInit() (err error) {
 		}
 		config.Name = k
 
-		if _, err = RegisterOrm(config); err != nil {
+		if _, err = registerOrm(config); err != nil {
 			return
 		}
 
@@ -61,7 +61,7 @@ func dbInit() (err error) {
 	return
 }
 
-func RegisterOrm(config Database) (o orm.Ormer, err error) {
+func registerOrm(config Database) (o orm.Ormer, err error) {
 	err = orm.RegisterDriver("mysql", orm.DRMySQL)
 	if err != nil {
 		return
