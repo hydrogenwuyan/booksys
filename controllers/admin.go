@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"project/booksys/common"
 	. "project/booksys/error_code"
+	"project/booksys/logic"
 	"project/booksys/models/dao"
-	"regexp"
+)
+
+const (
+	NameMaxLen  = 18
+	PhoneMaxLen = 18
 )
 
 // 管理员
@@ -13,37 +18,33 @@ type AdminControllers struct {
 	BaseController
 }
 
-type adminControllersLoginReq struct {
-	User     string `json:"user"`
-	Password string `json:"password"`
-}
-
 // 登陆
 func (c *AdminControllers) Login() {
-	msg := &adminControllersLoginReq{}
-	err := c.GetPost(msg)
+	type ReqMsg struct {
+		User     string `json:"user"`
+		Password string `json:"password"`
+	}
+
+	reqMsg := &ReqMsg{}
+	err := c.GetPost(reqMsg)
 	if err != nil {
-		fmt.Println(*msg)
 		return
 	}
 
 	// 过滤数据
-	reg := regexp.MustCompile(`[^a-zA-Z0-9]+`)
-	userErr := reg.FindAllString(msg.User, -1)
-	if len(userErr) != 0 {
-		common.LogFuncError("userErr: %v", userErr)
+	if !logic.IsStringOrNum(reqMsg.User) {
+		common.LogFuncError("check user error: %v", reqMsg.User)
 		c.ErrorResponse(ERROR_CODE_USER_NAME_ERROR)
 		return
 	}
-	passErr := reg.FindAllString(msg.Password, -1)
-	if len(passErr) != 0 {
-		common.LogFuncError("passErr: %v", passErr)
+	if !logic.IsStringOrNum(reqMsg.Password) {
+		common.LogFuncError("check pass error: %v", reqMsg.Password)
 		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
 		return
 	}
 
 	// 查询数据库验证密码
-	adminEntity, err := dao.AdminDaoEntity.Fetch(msg.User, msg.Password)
+	adminEntity, err := dao.AdminDaoEntity.Fetch(reqMsg.User, reqMsg.Password)
 	if err != nil {
 		c.ErrorResponse(ERROR_CODE_DB_ERROR)
 		return
@@ -61,16 +62,16 @@ func (c *AdminControllers) Login() {
 	}
 
 	type respMsg struct {
-		Id    int64  `json:"id"`
+		Id    string `json:"id"`
 		User  string `json:"user"`
 		Sex   int8   `json:"sex"`
-		Age   int8  `json:"age"`
-		Phone string  `json:"phone"`
+		Age   int8   `json:"age"`
+		Phone string `json:"phone"`
 		Name  string `json:"name"`
 	}
 
 	resp := &respMsg{
-		Id:    adminEntity.Id,
+		Id:    fmt.Sprintf("%d", adminEntity.Id),
 		User:  adminEntity.User,
 		Sex:   adminEntity.Sex,
 		Age:   adminEntity.Age,
@@ -83,5 +84,73 @@ func (c *AdminControllers) Login() {
 
 // 填写个人信息
 func (c *AdminControllers) MyInfo() {
+	id, errCode := c.ParseToken()
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
 
+	type ReqMsg struct {
+		Sex   int8   `json:"sex"`
+		Age   int8   `json:"age"`
+		Name  string `json:"name"`
+		Phone string `json:"phone"`
+	}
+
+	reqMsg := &ReqMsg{}
+	err := c.GetPost(reqMsg)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 验证sex
+	if !dao.SexType(reqMsg.Sex).Vaild() {
+		common.LogFuncWarning("sex warn: %v", reqMsg.Sex)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 验证name
+	if !logic.IsStringOrNum(reqMsg.Name) {
+		common.LogFuncError("check name error: %v", reqMsg.Name)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+	if len(reqMsg.Name) > NameMaxLen {
+		common.LogFuncWarning("check name warn: %v", reqMsg.Name)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 验证phone
+	if !logic.IsStringOrNum(reqMsg.Phone) {
+		common.LogFuncError("check phone error: %v", reqMsg.Phone)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+	if len(reqMsg.Phone) > PhoneMaxLen {
+		common.LogFuncWarning("check phone warn: %v", reqMsg.Phone)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	entity, err := dao.AdminDaoEntity.Info(id)
+	if err != nil || entity.Id == 0 {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	// 更新数据
+	entity.Sex = reqMsg.Sex
+	entity.Age = reqMsg.Age
+	entity.Name = reqMsg.Name
+	entity.Phone = reqMsg.Phone
+	err = dao.AdminDaoEntity.Update(entity)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	c.SuccessResponseWithoutData()
 }

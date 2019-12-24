@@ -53,6 +53,52 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "填写信息",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "description": "web",
+                "key": "type",
+                "type": "text",
+                "value": "web"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"sex\":0,\n\"age\":18,\n\"name\":\"bee\",\n\"phone\":\"15081722345\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/v1/admin/myinfo",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "myinfo"
+              ],
+              "query": [
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "protocolProfileBehavior": {},

@@ -5,6 +5,7 @@ type ERROR_CODE int
 const (
 	ERROR_CODE_USER_NAME_ERROR     ERROR_CODE = 1
 	ERROR_CODE_USER_PASSWORD_ERROR            = 2
+	ERROR_CODE_ERROR                          = 3
 	ERROR_CODE_SUCCESS             ERROR_CODE = 200
 	ERROR_CODE_DB_ERROR                       = 1000
 	ERROR_CODE_GENERATE_TOKEN_FAIL            = 1001
@@ -20,6 +21,7 @@ var (
 		ERROR_CODE_GENERATE_TOKEN_FAIL: "token生成失败",
 		ERROR_CODE_SET_TOKEN_FAIL:      "设置token失败",
 		ERROR_CODE_TOKEN_EXPIRED:       "token过期",
+		ERROR_CODE_ERROR:               "错误",
 	}
 )
 
