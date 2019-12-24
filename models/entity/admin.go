@@ -6,8 +6,8 @@ type AdminEntity struct {
 	User       string `orm:"column(user)" json:"user,omitempty"`
 	Password   string `orm:"column(password)" json:"password,omitempty"`
 	Sex        int8   `orm:"column(sex)" json:"sex,omitempty"`
-	Age        int8  `orm:"column(age)" json:"age,omitempty"`
-	Phone      string  `orm:"column(phone)" json:"phone,omitempty"`
+	Age        int8   `orm:"column(age)" json:"age,omitempty"`
+	Phone      string `orm:"column(phone)" json:"phone,omitempty"`
 	Name       string `orm:"column(name)" json:"name,omitempty"`
 	CreateTime int64  `orm:"column(createTime)" json:"createTime,omitempty"`
 	UpdateTime int64  `orm:"column(updateTime)" json:"updateTime,omitempty"`
@@ -35,7 +35,7 @@ const ATTRIBUTE_AdminEntity_Id = "Id"
 const ATTRIBUTE_AdminEntity_User = "User"
 const ATTRIBUTE_AdminEntity_Password = "Password"
 const ATTRIBUTE_AdminEntity_Sex = "Sex"
-const ATTRIBUTE_AdminEntity_Age= "Age"
+const ATTRIBUTE_AdminEntity_Age = "Age"
 const ATTRIBUTE_AdminEntity_Phone = "Phone"
 const ATTRIBUTE_AdminEntity_Name = "Name"
 const ATTRIBUTE_AdminEntity_CreateTime = "CreateTime"

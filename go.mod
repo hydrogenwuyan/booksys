@@ -13,5 +13,6 @@ require (
 	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/zheng-ji/goSnowFlake v0.0.0-20180906112711-fc763800eec9
+	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 	google.golang.org/appengine v1.6.5 // indirect
 )

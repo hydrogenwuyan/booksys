@@ -10,6 +10,8 @@ func init() {
 	ns := beego.NewNamespace("/v1",
 		beego.NSBefore(before),
 		beego.NSNamespace("/admin",
+			// 注册
+			beego.NSRouter("/register", &controllers.AdminControllers{}, "post:Register"),
 			// 登陆
 			beego.NSRouter("/login", &controllers.AdminControllers{}, "post:Login"),
 			// 填写个人信息

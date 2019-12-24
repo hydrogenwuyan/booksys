@@ -44,6 +44,27 @@ func NewAdminDao(name string) (dao *AdminDao) {
 	return
 }
 
+func (dao *AdminDao) Create(user string, pass string) (err error) {
+	admin := &entity.AdminEntity{
+		User:       user,
+		Password:   pass,
+		Sex:        0,
+		Age:        0,
+		Phone:      "",
+		Name:       "",
+		CreateTime: 0,
+		UpdateTime: 0,
+		DeleteTime: 0,
+	}
+	_, err = AdminDaoEntity.orm.Insert(admin)
+	if err != nil {
+		common.LogFuncError("adminDao create, error: %v", err)
+		return
+	}
+
+	return
+}
+
 func (dao *AdminDao) Info(id int64) (e *entity.AdminEntity, err error) {
 	e = &entity.AdminEntity{}
 	err = AdminDaoEntity.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_Id, id).One(e)
@@ -53,7 +74,23 @@ func (dao *AdminDao) Info(id int64) (e *entity.AdminEntity, err error) {
 			e.Id = 0
 			return
 		}
-		common.LogFuncError("AdminDao Fetch, error: %v", err)
+		common.LogFuncError("adminDao info, error: %v", err)
+		return
+	}
+
+	return
+}
+
+func (dao *AdminDao) FetchByUser(user string) (e *entity.AdminEntity, err error) {
+	e = &entity.AdminEntity{}
+	err = AdminDaoEntity.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_User, user).One(e)
+	if err != nil {
+		if err == orm.ErrNoRows {
+			err = nil
+			e.Id = 0
+			return
+		}
+		common.LogFuncError("adminDao fetch, error: %v", err)
 		return
 	}
 
@@ -69,7 +106,7 @@ func (dao *AdminDao) Fetch(user string, pass string) (e *entity.AdminEntity, err
 			e.Id = 0
 			return
 		}
-		common.LogFuncError("AdminDao Fetch, error: %v", err)
+		common.LogFuncError("adminDao fetch, error: %v", err)
 		return
 	}
 
@@ -79,7 +116,7 @@ func (dao *AdminDao) Fetch(user string, pass string) (e *entity.AdminEntity, err
 func (dao *AdminDao) Update(e *entity.AdminEntity) (err error) {
 	_, err = AdminDaoEntity.orm.Update(e)
 	if err != nil {
-		common.LogFuncError("AdminDao Fetch, error: %v", err)
+		common.LogFuncError("adminDao update, error: %v", err)
 		return
 	}
 

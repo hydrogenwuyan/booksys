@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"project/booksys/common"
 	. "project/booksys/error_code"
 	"project/booksys/logic"
@@ -11,11 +12,75 @@ import (
 const (
 	NameMaxLen  = 18
 	PhoneMaxLen = 18
+	UserMaxLen  = 18
+	PassMaxLen  = 18
 )
 
 // 管理员
 type AdminControllers struct {
 	BaseController
+}
+
+// 注册
+func (c *AdminControllers) Register() {
+	type ReqMsg struct {
+		User     string `json:"user"`
+		Password string `json:"password"`
+	}
+
+	reqMsg := &ReqMsg{}
+	err := c.GetPost(reqMsg)
+	if err != nil {
+		return
+	}
+
+	// 过滤数据
+	if !logic.IsStringOrNum(reqMsg.User) {
+		common.LogFuncError("check user error: %v", reqMsg.User)
+		c.ErrorResponse(ERROR_CODE_USER_NAME_ERROR)
+		return
+	}
+	if len(reqMsg.User) > UserMaxLen {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+	if !logic.IsStringOrNum(reqMsg.Password) {
+		common.LogFuncError("check pass error: %v", reqMsg.Password)
+		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
+		return
+	}
+	if len(reqMsg.Password) > PassMaxLen {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 判断用户名已被注册
+	adminEntity, err := dao.AdminDaoEntity.FetchByUser(reqMsg.User)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+	if adminEntity.Id != 0 {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 加密
+	pass, err := bcrypt.GenerateFromPassword([]byte(reqMsg.Password), bcrypt.DefaultCost)
+	if err != nil {
+		common.LogFuncError("check pass error: %v", reqMsg.Password)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 创建管理员数据
+	err = dao.AdminDaoEntity.Create(reqMsg.User, string(pass))
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	c.SuccessResponseWithoutData()
 }
 
 // 登陆
@@ -37,19 +102,33 @@ func (c *AdminControllers) Login() {
 		c.ErrorResponse(ERROR_CODE_USER_NAME_ERROR)
 		return
 	}
+	if len(reqMsg.User) > UserMaxLen {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
 	if !logic.IsStringOrNum(reqMsg.Password) {
 		common.LogFuncError("check pass error: %v", reqMsg.Password)
 		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
 		return
 	}
+	if len(reqMsg.Password) > PassMaxLen {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
 
 	// 查询数据库验证密码
-	adminEntity, err := dao.AdminDaoEntity.Fetch(reqMsg.User, reqMsg.Password)
+	adminEntity, err := dao.AdminDaoEntity.FetchByUser(reqMsg.User)
 	if err != nil {
 		c.ErrorResponse(ERROR_CODE_DB_ERROR)
 		return
 	}
 	if adminEntity.Id == 0 {
+		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(adminEntity.Password), []byte(reqMsg.Password))
+	if err != nil {
 		c.ErrorResponse(ERROR_CODE_USER_PASSWORD_ERROR)
 		return
 	}
