@@ -14,10 +14,10 @@ type BookEntity struct {
 }
 
 func (e *BookEntity) TableName() string {
-	return "t_Book_entity"
+	return "t_book_entity"
 }
 
-const TABLE_BookEntity = "t_Book_entity"
+const TABLE_BookEntity = "t_book_entity"
 
 const COLUMN_BookEntity_Id = "id"
 const COLUMN_BookEntity_IsBorrow = "isBorrow"
@@ -30,7 +30,7 @@ const COLUMN_BookEntity_UpdateTime = "updateTime"
 const COLUMN_BookEntity_DeleteTime = "deleteTime"
 
 const ATTRIBUTE_BookEntity_Id = "Id"
-const ATTRIBUTE_BookEntity_IsBorrow  = "IsBorrow "
+const ATTRIBUTE_BookEntity_IsBorrow = "IsBorrow "
 const ATTRIBUTE_BookEntity_Type = "Type"
 const ATTRIBUTE_BookEntity_Name = "Name"
 const ATTRIBUTE_BookEntity_Author = "Author"

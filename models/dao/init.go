@@ -6,4 +6,5 @@ const (
 
 func Init() {
 	AdminDaoEntity = NewAdminDao(database)
+	BookDaoEntity = NewBookDao(database)
 }

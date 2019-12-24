@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"project/booksys/common"
 	"project/booksys/models/entity"
+	"project/booksys/utils/timeutils"
 )
 
 type SexType int8
@@ -13,7 +14,7 @@ const (
 	SexTypeWoman
 )
 
-func (t SexType) Vaild() bool {
+func (t SexType) Valid() bool {
 	switch t {
 	case SexTypeMan,
 		SexTypeWoman:
@@ -48,13 +49,9 @@ func (dao *AdminDao) Create(user string, pass string) (err error) {
 	admin := &entity.AdminEntity{
 		User:       user,
 		Password:   pass,
-		Sex:        0,
-		Age:        0,
 		Phone:      "",
 		Name:       "",
-		CreateTime: 0,
-		UpdateTime: 0,
-		DeleteTime: 0,
+		CreateTime: timeutils.Now(),
 	}
 	_, err = AdminDaoEntity.orm.Insert(admin)
 	if err != nil {
@@ -67,7 +64,7 @@ func (dao *AdminDao) Create(user string, pass string) (err error) {
 
 func (dao *AdminDao) Info(id int64) (e *entity.AdminEntity, err error) {
 	e = &entity.AdminEntity{}
-	err = AdminDaoEntity.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_Id, id).One(e)
+	err = dao.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_Id, id).One(e)
 	if err != nil {
 		if err == orm.ErrNoRows {
 			err = nil
@@ -83,7 +80,7 @@ func (dao *AdminDao) Info(id int64) (e *entity.AdminEntity, err error) {
 
 func (dao *AdminDao) FetchByUser(user string) (e *entity.AdminEntity, err error) {
 	e = &entity.AdminEntity{}
-	err = AdminDaoEntity.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_User, user).One(e)
+	err = dao.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_User, user).One(e)
 	if err != nil {
 		if err == orm.ErrNoRows {
 			err = nil
@@ -99,7 +96,7 @@ func (dao *AdminDao) FetchByUser(user string) (e *entity.AdminEntity, err error)
 
 func (dao *AdminDao) Fetch(user string, pass string) (e *entity.AdminEntity, err error) {
 	e = &entity.AdminEntity{}
-	err = AdminDaoEntity.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_User, user).Filter(entity.COLUMN_AdminEntity_Password, pass).One(e)
+	err = dao.orm.QueryTable(entity.TABLE_AdminEntity).Filter(entity.COLUMN_AdminEntity_User, user).Filter(entity.COLUMN_AdminEntity_Password, pass).One(e)
 	if err != nil {
 		if err == orm.ErrNoRows {
 			err = nil
@@ -114,7 +111,8 @@ func (dao *AdminDao) Fetch(user string, pass string) (e *entity.AdminEntity, err
 }
 
 func (dao *AdminDao) Update(e *entity.AdminEntity) (err error) {
-	_, err = AdminDaoEntity.orm.Update(e)
+	e.UpdateTime = timeutils.Now()
+	_, err = dao.orm.Update(e)
 	if err != nil {
 		common.LogFuncError("adminDao update, error: %v", err)
 		return

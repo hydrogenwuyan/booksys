@@ -7,6 +7,7 @@ import (
 	. "project/booksys/error_code"
 	"project/booksys/logic"
 	"project/booksys/models/dao"
+	"project/booksys/models/entity"
 )
 
 const (
@@ -31,6 +32,7 @@ func (c *AdminControllers) Register() {
 	reqMsg := &ReqMsg{}
 	err := c.GetPost(reqMsg)
 	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
 		return
 	}
 
@@ -93,6 +95,7 @@ func (c *AdminControllers) Login() {
 	reqMsg := &ReqMsg{}
 	err := c.GetPost(reqMsg)
 	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
 		return
 	}
 
@@ -184,7 +187,7 @@ func (c *AdminControllers) MyInfo() {
 	}
 
 	// 验证sex
-	if !dao.SexType(reqMsg.Sex).Vaild() {
+	if !dao.SexType(reqMsg.Sex).Valid() {
 		common.LogFuncWarning("sex warn: %v", reqMsg.Sex)
 		c.ErrorResponse(ERROR_CODE_ERROR)
 		return
@@ -226,6 +229,49 @@ func (c *AdminControllers) MyInfo() {
 	entity.Name = reqMsg.Name
 	entity.Phone = reqMsg.Phone
 	err = dao.AdminDaoEntity.Update(entity)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	c.SuccessResponseWithoutData()
+}
+
+func (c *AdminControllers) AddBook() {
+	_, errCode := c.ParseToken()
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	type ReqMsg struct {
+		Type   int32  `json:"type"`
+		Name   string `json:"name"`
+		Author string `json:"author"`
+		Press  string `json:"press"`
+	}
+
+	reqMsg := &ReqMsg{}
+	err := c.GetPost(reqMsg)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 检查type
+	if !dao.BookType(reqMsg.Type).Valid() {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// TODO: 正则判断
+	bookEntity := &entity.BookEntity{
+		Type:   reqMsg.Type,
+		Name:   reqMsg.Name,
+		Author: reqMsg.Author,
+		Press:  reqMsg.Press,
+	}
+	err = dao.BookDaoEntity.Create(bookEntity)
 	if err != nil {
 		c.ErrorResponse(ERROR_CODE_DB_ERROR)
 		return

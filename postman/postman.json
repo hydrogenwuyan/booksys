@@ -145,6 +145,52 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "添加图书",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "description": "web",
+                "key": "type",
+                "type": "text",
+                "value": "web"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"type\":0,\n\"name\":\"Go programming language\",\n\"author\":\"Kernighan & Alan Donovan\",\n\"press\":\"www\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/v1/admin/add_book",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "add_book"
+              ],
+              "query": [
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "protocolProfileBehavior": {},

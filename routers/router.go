@@ -16,10 +16,8 @@ func init() {
 			beego.NSRouter("/login", &controllers.AdminControllers{}, "post:Login"),
 			// 填写个人信息
 			beego.NSRouter("/myinfo", &controllers.AdminControllers{}, "post:MyInfo"),
-			// 根据书名查询图书信息
-			//beego.NSRouter("/bookname", &controllers.AdminControllers{}, "get:BookName"),
-			//// 根据作者查询图书信息
-			//beego.NSRouter("/bookauthor", &controllers.AdminControllers{}, "get:BookAuthor"),
+			// 添加图书
+			beego.NSRouter("/add_book", &controllers.AdminControllers{}, "post:AddBook"),
 			//// 学生借书
 			//beego.NSRouter("/borrow", &controllers.AdminControllers{}, "post:Borrow"),
 			//// 学生还书
@@ -30,6 +28,14 @@ func init() {
 			//beego.NSRouter("/stublacklist", &controllers.AdminControllers{}, "get:StuBlackList"),
 			//// 从黑名单删除学生
 			//beego.NSRouter("/stublacklistdel", &controllers.AdminControllers{}, "post:StuBlackListDel"),
+		),
+		beego.NSNamespace("/book",
+			// 根据书名查询图书信息
+			beego.NSRouter("/name", &controllers.BookControllers{}, "get:Name"),
+			// 根据作者查询图书信息
+			beego.NSRouter("/author", &controllers.BookControllers{}, "get:Author"),
+			// 根据作者查询图书信息
+			beego.NSRouter("/author", &controllers.BookControllers{}, "get:BookType"),
 		),
 		//beego.NSNamespace("/student",
 		//	// 注册
