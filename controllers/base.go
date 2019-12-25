@@ -17,6 +17,31 @@ type BaseController struct {
 	beego.Controller
 }
 
+func (c *BaseController) GetReqPage() (page, limit int32, err error) {
+	pageInt, err := c.GetInt("page", 1)
+	if err != nil {
+		common.LogFuncWarning("get parameter %s failed : %v", page, err)
+		return
+	}
+	if pageInt < 1 {
+		pageInt = 1
+	}
+
+	limitInt, err := c.GetInt("limit", 10)
+	if err != nil {
+		common.LogFuncWarning("get parameter %s failed : %v", limit, err)
+		return
+	}
+	if limitInt > 10 {
+		limitInt = 10
+	}
+
+	page = int32(pageInt)
+	limit = int32(limitInt)
+
+	return
+}
+
 func (c *BaseController) GetPost(reqData interface{}) (err error) {
 	err = json.Unmarshal(c.Ctx.Input.RequestBody, reqData)
 	if err != nil {
@@ -57,9 +82,8 @@ func (c *BaseController) ErrorResponse(errCode ERROR_CODE) {
 	}
 }
 
-
 // 设置token
-func (c *BaseController) SetToken(id int64)(errCode ERROR_CODE) {
+func (c *BaseController) SetToken(id int64) (errCode ERROR_CODE) {
 	errCode = ERROR_CODE_SUCCESS
 	token, err := tokenutils.GenerateToken(id)
 	if err != nil {

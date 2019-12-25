@@ -35,7 +35,7 @@ func init() {
 			// 根据作者查询图书信息
 			beego.NSRouter("/author", &controllers.BookControllers{}, "get:Author"),
 			// 根据作者查询图书信息
-			beego.NSRouter("/author", &controllers.BookControllers{}, "get:BookType"),
+			beego.NSRouter("/type", &controllers.BookControllers{}, "get:BookType"),
 		),
 		//beego.NSNamespace("/student",
 		//	// 注册
