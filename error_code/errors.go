@@ -11,6 +11,7 @@ const (
 	ERROR_CODE_GENERATE_TOKEN_FAIL            = 1001
 	ERROR_CODE_SET_TOKEN_FAIL                 = 1002
 	ERROR_CODE_TOKEN_EXPIRED                  = 1003
+	ERROR_CODE_BOOK_NOT_EXIST                 = 1004
 )
 
 var (
@@ -22,6 +23,7 @@ var (
 		ERROR_CODE_SET_TOKEN_FAIL:      "设置token失败",
 		ERROR_CODE_TOKEN_EXPIRED:       "token过期",
 		ERROR_CODE_ERROR:               "错误",
+		ERROR_CODE_BOOK_NOT_EXIST:      "图书已被借走",
 	}
 )
 

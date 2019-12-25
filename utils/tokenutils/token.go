@@ -12,7 +12,7 @@ var (
 )
 
 const (
-	AccessTokenExpiredSecs = 3600 // 过期时间
+	AccessTokenExpiredSecs = 3000 // 过期时间
 )
 
 const (

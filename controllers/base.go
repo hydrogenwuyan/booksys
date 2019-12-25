@@ -107,7 +107,7 @@ func (c *BaseController) SetToken(id int64, identity string) (errCode ERROR_CODE
 }
 
 // 解析token
-func (c *BaseController) ParseToken() (id int64, errCode ERROR_CODE) {
+func (c *BaseController) ParseToken(identity string) (id int64, errCode ERROR_CODE) {
 	errCode = ERROR_CODE_SUCCESS
 	token := c.Ctx.GetCookie(TokenKey)
 	result, idStr := tokenutils.CheckAndParseToken(token)
@@ -117,12 +117,17 @@ func (c *BaseController) ParseToken() (id int64, errCode ERROR_CODE) {
 	}
 
 	idList := strings.Split(idStr, ".")
-	if len(idList) < 1 {
+	if len(idList) < 2 {
 		errCode = ERROR_CODE_TOKEN_EXPIRED
 		return
 	}
 	id, err := strconv.ParseInt(idList[0], 10, 64)
 	if err != nil {
+		errCode = ERROR_CODE_TOKEN_EXPIRED
+		return
+	}
+
+	if idList[1] != identity {
 		errCode = ERROR_CODE_TOKEN_EXPIRED
 		return
 	}

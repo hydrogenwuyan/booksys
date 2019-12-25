@@ -75,7 +75,15 @@ func (c *StudentControllers) Register() {
 	}
 
 	// 创建学生数据
-	err = dao.StudentDaoEntity.Create(reqMsg.User, string(pass))
+	info := make([]*dao.BorrowInfo, 0, 8)
+	data, err := json.Marshal(&info)
+	if err != nil {
+		common.LogFuncError("marshal error: %v", err)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	err = dao.StudentDaoEntity.Create(reqMsg.User, string(pass), string(data))
 	if err != nil {
 		c.ErrorResponse(ERROR_CODE_DB_ERROR)
 		return
@@ -181,7 +189,7 @@ func (c *StudentControllers) MyInfo() {
 
 // 借书
 func (c *StudentControllers) Borrow() {
-	stuId, errCode := c.ParseToken()
+	stuId, errCode := c.ParseToken(IdentityStudent)
 	if errCode != ERROR_CODE_SUCCESS {
 		c.ErrorResponse(errCode)
 		return
@@ -223,5 +231,35 @@ func (c *StudentControllers) Borrow() {
 
 // 还书
 func (c *StudentControllers) GiveBack() {
+	stuId, errCode := c.ParseToken(IdentityStudent)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
 
+	type ReqMsg struct {
+		BookId string `json:"bookId"`
+	}
+
+	reqMsg := &ReqMsg{}
+	err := c.GetPost(reqMsg)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	bookId, err := strconv.ParseInt(reqMsg.BookId, 10, 64)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 还书
+	errCode = logic.GiveBackBook(stuId, bookId)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
+
+	c.SuccessResponseWithoutData()
 }

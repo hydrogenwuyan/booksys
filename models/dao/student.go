@@ -37,10 +37,11 @@ func NewStudentDao(name string) (dao *StudentDao) {
 	return
 }
 
-func (dao *StudentDao) Create(user string, pass string) (err error) {
+func (dao *StudentDao) Create(user string, pass string, data string) (err error) {
 	stu := &entity.StudentEntity{
 		User:       user,
 		Password:   pass,
+		BorrowInfo: data,
 		CreateTime: timeutils.Now(),
 	}
 	_, err = dao.orm.Insert(stu)

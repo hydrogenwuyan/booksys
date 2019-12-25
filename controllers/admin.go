@@ -166,7 +166,7 @@ func (c *AdminControllers) Login() {
 
 // 填写个人信息
 func (c *AdminControllers) MyInfo() {
-	id, errCode := c.ParseToken()
+	id, errCode := c.ParseToken(IdentityAdmin)
 	if errCode != ERROR_CODE_SUCCESS {
 		c.ErrorResponse(errCode)
 		return
@@ -238,7 +238,7 @@ func (c *AdminControllers) MyInfo() {
 }
 
 func (c *AdminControllers) AddBook() {
-	_, errCode := c.ParseToken()
+	_, errCode := c.ParseToken(IdentityAdmin)
 	if errCode != ERROR_CODE_SUCCESS {
 		c.ErrorResponse(errCode)
 		return

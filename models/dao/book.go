@@ -55,7 +55,7 @@ func (dao *BookDao) Create(e *entity.BookEntity) (err error) {
 	e.CreateTime = timeutils.Now()
 	_, err = dao.orm.Insert(e)
 	if err != nil {
-		common.LogFuncError("adminDao create, error: %v", err)
+		common.LogFuncError("BookDao create, error: %v", err)
 		return
 	}
 
@@ -147,7 +147,7 @@ func (dao *BookDao) FetchByIdAndIsBorrow(id int64, isBorrow int8) (e *entity.Boo
 			err = nil
 			e.Id = 0
 		}
-		common.LogFuncError("adminDao create, error: %v", err)
+		common.LogFuncError("BookDao fetchByIdAndIsBorrow, error: %v", err)
 		return
 	}
 
@@ -158,7 +158,7 @@ func (dao *BookDao) UpdateAboutBorrow(id int64, isBorrow int8) (err error) {
 	sql := fmt.Sprintf("update %s set %s=? where %s=?", entity.TABLE_BookEntity, entity.COLUMN_BookEntity_IsBorrow, entity.COLUMN_BookEntity_Id)
 	_, err = dao.orm.Raw(sql, isBorrow, id).Exec()
 	if err != nil {
-		common.LogFuncError("adminDao create, error: %v", err)
+		common.LogFuncError("BookDao updateAboutBorrow, error: %v", err)
 		return
 	}
 
