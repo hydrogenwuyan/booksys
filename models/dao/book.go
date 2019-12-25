@@ -25,6 +25,11 @@ func (t BookType) Valid() bool {
 	}
 }
 
+const (
+	BookNotIsBorrow = iota // 未被借阅
+	BookIsBorrow           // 已被借阅
+)
+
 type BookDao struct {
 	orm  orm.Ormer
 	name string
@@ -128,6 +133,32 @@ func (dao *BookDao) FetchByType(page, limit int32, typ int32) (entityList []*ent
 	_, err = dao.orm.Raw(sql, typ, offset, limit).QueryRows(&entityList)
 	if err != nil {
 		common.LogFuncError("BookDao fetchByAuthor, error: %v", err)
+		return
+	}
+
+	return
+}
+
+func (dao *BookDao) FetchByIdAndIsBorrow(id int64, isBorrow int8) (e *entity.BookEntity, err error) {
+	e = &entity.BookEntity{}
+	err = dao.orm.QueryTable(entity.TABLE_BookEntity).Filter(entity.COLUMN_BookEntity_Id, id).Filter(entity.COLUMN_BookEntity_IsBorrow, isBorrow).One(e)
+	if err != nil {
+		if err == orm.ErrNoRows {
+			err = nil
+			e.Id = 0
+		}
+		common.LogFuncError("adminDao create, error: %v", err)
+		return
+	}
+
+	return
+}
+
+func (dao *BookDao) UpdateAboutBorrow(id int64, isBorrow int8) (err error) {
+	sql := fmt.Sprintf("update %s set %s=? where %s=?", entity.TABLE_BookEntity, entity.COLUMN_BookEntity_IsBorrow, entity.COLUMN_BookEntity_Id)
+	_, err = dao.orm.Raw(sql, isBorrow, id).Exec()
+	if err != nil {
+		common.LogFuncError("adminDao create, error: %v", err)
 		return
 	}
 

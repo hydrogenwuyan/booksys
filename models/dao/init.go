@@ -1,10 +1,11 @@
 package dao
 
 const (
-	database = "booksys"
+	Database = "booksys"
 )
 
 func Init() {
-	AdminDaoEntity = NewAdminDao(database)
-	BookDaoEntity = NewBookDao(database)
+	AdminDaoEntity = NewAdminDao(Database)
+	BookDaoEntity = NewBookDao(Database)
+	StudentDaoEntity = NewStudentDao(Database)
 }

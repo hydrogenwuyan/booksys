@@ -6,8 +6,8 @@ type StudentEntity struct {
 	User       string `orm:"column(user)" json:"user,omitempty"`
 	Password   string `orm:"column(password)" json:"password,omitempty"`
 	Sex        int8   `orm:"column(sex)" json:"sex,omitempty"`
-	Age        int32  `orm:"column(age)" json:"age,omitempty"`
-	Phone      int32  `orm:"column(phone)" json:"phone,omitempty"`
+	Age        int8   `orm:"column(age)" json:"age,omitempty"`
+	Phone      string `orm:"column(phone)" json:"phone,omitempty"`
 	Name       string `orm:"column(name)" json:"name,omitempty"`
 	BorrowInfo string `orm:"column(borrowInfo)" json:"borrowInfo,omitempty"`
 	CreateTime int64  `orm:"column(createTime)" json:"createTime,omitempty"`

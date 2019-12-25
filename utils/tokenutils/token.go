@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"project/booksys/common"
-	"strconv"
 	"time"
 )
 
@@ -24,16 +23,16 @@ const (
 )
 
 type Claims struct {
-	UserId int64 `json:"UserId"`
+	UserId string `json:"UserId"`
 	jwt.StandardClaims
 }
 
 // 获取token
-func GenerateToken(id int64) (token string, err error) {
+func GenerateToken(id string) (token string, err error) {
 	claims := Claims{
 		id,
 		jwt.StandardClaims{
-			Id:        fmt.Sprint(id),
+			Id:        id,
 			NotBefore: int64(time.Now().Unix()),
 			ExpiresAt: int64(time.Now().Unix() + AccessTokenExpiredSecs),
 		},
@@ -49,24 +48,24 @@ func GenerateToken(id int64) (token string, err error) {
 }
 
 // 设置token
-func SetToken(id int64, token string) (err error) {
-	err = common.RedisClient.Set(tokenKey(fmt.Sprint(id)), token, time.Second*time.Duration(AccessTokenExpiredSecs)).Err()
+func SetToken(id string, token string) (err error) {
+	err = common.RedisClient.Set(tokenKey(id), token, time.Second*time.Duration(AccessTokenExpiredSecs)).Err()
 	if err != nil {
 		common.LogFuncError("redis set token fail, error: %v", err)
 		return
 	}
 
-	common.LogFuncDebug("token[%s] : %s", tokenKey(fmt.Sprint(id)), token)
+	common.LogFuncDebug("token[%s] : %s", tokenKey(id), token)
 	return
 }
 
 // 检查解析token
-func CheckAndParseToken(token string) (result uint8, id int64) {
+func CheckAndParseToken(token string) (result uint8, id string) {
 	return checkAndParseToken(token)
 }
 
 // 检查解析token
-func checkAndParseToken(token string) (result uint8, id int64) {
+func checkAndParseToken(token string) (result uint8, id string) {
 	t, err := parseToken(token)
 	if err != nil {
 		result = TokenParseFail
@@ -88,13 +87,7 @@ func checkAndParseToken(token string) (result uint8, id int64) {
 			return
 		}
 
-		idInt, err := strconv.Atoi(claims.Id)
-		if err != nil {
-			result = TokenParseFail
-			common.LogFuncError("CheckToken Id Atoi Fail, error: ", err)
-			return
-		}
-		id = int64(idInt)
+		id = claims.Id
 		return
 	} else {
 		result = TokenParseFail
@@ -105,13 +98,13 @@ func checkAndParseToken(token string) (result uint8, id int64) {
 }
 
 // 清理token
-func ClearToken(token string) bool{
+func ClearToken(token string) bool {
 	result, id := CheckAndParseToken(token)
 	if result != TokenOk {
 		return false
 	}
 
-	key := tokenKey(fmt.Sprint(id))
+	key := tokenKey(id)
 	err := common.RedisClient.Del(key).Err()
 	if err != nil {
 		return false

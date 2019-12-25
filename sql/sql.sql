@@ -37,6 +37,4 @@ CREATE TABLE IF NOT EXISTS `t_book_entity` (
     `deleteTime` bigint(20)  DEFAULT 0 COMMENT "删除时间",
     PRIMARY KEY(`id`)
 ) ENGINE=InnoDB COMMENT='admin entity''' DEFAULT CHARSET=utf8;
-CREATE INDEX `t_book_entity_name` ON `t_book_entity` (`name`);
-CREATE INDEX `t_book_entity_author` ON `t_book_entity` (`author`);
 CREATE INDEX `t_book_entity_type` ON `t_book_entity` (`type`);

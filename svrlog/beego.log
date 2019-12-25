@@ -1,4 +1,62 @@
-2019/12/14 16:59:56.111 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
-2019/12/14 17:16:20.136 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
-2019/12/14 17:27:13.252 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
-2019/12/14 17:27:21.852 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 14:35:44.515 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 14:36:32.927 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/controllers/admin.go:34] userErr: [*] 
+2019/12/24 14:37:36.688 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 14:38:02.673 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/controllers/admin.go:34] userErr: [124*] 
+2019/12/24 14:49:27.451 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 14:49:34.597 [W] [logs.go:93]  [/Users/xubin/go/src/project/booksys/controllers/admin.go:32] userErr: 124*23 
+2019/12/24 14:50:35.393 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 14:50:37.519 [W] [logs.go:93]  [/Users/xubin/go/src/project/booksys/controllers/admin.go:32] userErr: afasd 
+2019/12/24 14:50:49.656 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 15:13:18.110 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 15:13:21.415 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:143] parse token [] failed ： token contains an invalid number of segments 
+2019/12/24 15:13:48.646 [D] [logs.go:108]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:59] token[booksys.1] : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsImV4cCI6MTU3NzE3NTIyOCwianRpIjoiMSIsIm5iZiI6MTU3NzE3MTYyOH0.seMCggGmm7bjPvAz5sVwFpu5mFwPxNuZWlchIlc8G3Y 
+2019/12/24 15:20:51.158 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/controllers/base.go:23] BaseController GetPost Unmarshal Fail, error: json: cannot unmarshal number 88888888888 into Go struct field ReqMsg.age of type int8 
+2019/12/24 16:03:19.423 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 16:04:49.043 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/admin.go:52] adminDao create, error: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'valuses(?,?)' at line 1 
+2019/12/24 16:07:47.334 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 16:07:57.986 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/admin.go:52] adminDao create, error: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'valuses(?,?)' at line 1 
+2019/12/24 16:09:22.070 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/admin.go:52] adminDao create, error: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'valuses(?,?)' at line 1 
+2019/12/24 16:10:13.050 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 16:11:16.470 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/admin.go:52] adminDao create, error: sql: expected 0 arguments, got 2 
+2019/12/24 16:12:15.916 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 16:12:19.204 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/admin.go:52] adminDao create, error: Error 1054: Unknown column '?' in 'field list' 
+2019/12/24 16:12:36.189 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 16:12:41.545 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/admin.go:52] adminDao create, error: Error 1364: Field 'sex' doesn't have a default value 
+2019/12/24 16:21:14.348 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 16:23:07.448 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:143] parse token [] failed ： token contains an invalid number of segments 
+2019/12/24 16:23:22.439 [D] [logs.go:108]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:59] token[booksys.1] : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsImV4cCI6MTU3NzE3OTQwMiwianRpIjoiMSIsIm5iZiI6MTU3NzE3NTgwMn0.UGXeLlBpD9ZJuTe_fihiTJRO4tyfXjpyJHNUF4JPCxs 
+2019/12/24 18:48:23.945 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 18:48:27.607 [C] [panic.go:679]  the request url is  /v1/admin/add_book
+2019/12/24 18:48:27.607 [C] [panic.go:679]  Handler crashed with error runtime error: invalid memory address or nil pointer dereference
+2019/12/24 18:48:27.607 [C] [panic.go:679]  /usr/local/go/src/runtime/panic.go:679
+2019/12/24 18:48:27.607 [C] [panic.go:679]  /usr/local/go/src/runtime/panic.go:199
+2019/12/24 18:48:27.607 [C] [panic.go:679]  /usr/local/go/src/runtime/signal_unix.go:394
+2019/12/24 18:48:27.607 [C] [panic.go:679]  /Users/xubin/go/src/project/booksys/models/dao/book.go:50
+2019/12/24 18:48:27.607 [C] [panic.go:679]  /Users/xubin/go/src/project/booksys/controllers/admin.go:268
+2019/12/24 18:48:27.608 [C] [panic.go:679]  /usr/local/go/src/reflect/value.go:460
+2019/12/24 18:48:27.608 [C] [panic.go:679]  /usr/local/go/src/reflect/value.go:321
+2019/12/24 18:48:27.608 [C] [panic.go:679]  /Users/xubin/go/pkg/mod/github.com/astaxie/beego@v1.12.0/router.go:853
+2019/12/24 18:48:27.608 [C] [panic.go:679]  /usr/local/go/src/net/http/server.go:2802
+2019/12/24 18:48:27.608 [C] [panic.go:679]  /usr/local/go/src/net/http/server.go:1890
+2019/12/24 18:48:27.608 [C] [panic.go:679]  /usr/local/go/src/runtime/asm_amd64.s:1357
+2019/12/24 18:50:02.882 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 18:50:08.181 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/book.go:52] adminDao create, error: Error 1146: Table 'booksys.t_Book_entity' doesn't exist 
+2019/12/24 18:50:40.625 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 18:50:43.622 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/models/dao/book.go:52] adminDao create, error: Error 1146: Table 'booksys.t_Book_entity' doesn't exist 
+2019/12/24 18:50:59.148 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/24 18:51:35.029 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 10:39:25.924 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 10:58:12.403 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 11:20:56.050 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 11:28:40.042 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 11:40:45.330 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 11:41:27.963 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 14:11:57.583 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 14:31:46.027 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 14:31:59.492 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:136] parse token [] failed ： token contains an invalid number of segments 
+2019/12/25 14:32:09.112 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:136] parse token [] failed ： token contains an invalid number of segments 
+2019/12/25 14:34:17.087 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:136] parse token [] failed ： token contains an invalid number of segments 
+2019/12/25 14:36:17.199 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019
+2019/12/25 14:36:20.956 [E] [logs.go:88]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:136] parse token [] failed ： token contains an invalid number of segments 
+2019/12/25 14:36:36.464 [D] [logs.go:108]  [/Users/xubin/go/src/project/booksys/utils/tokenutils/token.go:58] token[booksys.1.admin] : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxLmFkbWluIiwiZXhwIjoxNTc3MjU5Mzk2LCJqdGkiOiIxLmFkbWluIiwibmJmIjoxNTc3MjU1Nzk2fQ.YFI6l9y47a1-jShkeJQvQ0WxwYe_XTXH0BDsw_q8Xfs 
+2019/12/25 16:12:55.329 [I] [asm_amd64.s:1357]  http server Running on http://127.0.0.1:12019

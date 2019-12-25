@@ -7,10 +7,14 @@ import (
 	"project/booksys/common"
 	. "project/booksys/error_code"
 	"project/booksys/utils/tokenutils"
+	"strconv"
+	"strings"
 )
 
 const (
-	TokenKey = "token"
+	TokenKey        = "token"
+	IdentityStudent = "student"
+	IdentityAdmin   = "admin"
 )
 
 type BaseController struct {
@@ -83,15 +87,16 @@ func (c *BaseController) ErrorResponse(errCode ERROR_CODE) {
 }
 
 // 设置token
-func (c *BaseController) SetToken(id int64) (errCode ERROR_CODE) {
+func (c *BaseController) SetToken(id int64, identity string) (errCode ERROR_CODE) {
 	errCode = ERROR_CODE_SUCCESS
-	token, err := tokenutils.GenerateToken(id)
+	idStr := fmt.Sprintf("%d.%s", id, identity)
+	token, err := tokenutils.GenerateToken(idStr)
 	if err != nil {
 		errCode = ERROR_CODE_GENERATE_TOKEN_FAIL
 		return
 	}
 
-	err = tokenutils.SetToken(id, token)
+	err = tokenutils.SetToken(idStr, token)
 	if err != nil {
 		errCode = ERROR_CODE_SET_TOKEN_FAIL
 		return
@@ -105,8 +110,19 @@ func (c *BaseController) SetToken(id int64) (errCode ERROR_CODE) {
 func (c *BaseController) ParseToken() (id int64, errCode ERROR_CODE) {
 	errCode = ERROR_CODE_SUCCESS
 	token := c.Ctx.GetCookie(TokenKey)
-	result, id := tokenutils.CheckAndParseToken(token)
+	result, idStr := tokenutils.CheckAndParseToken(token)
 	if result != tokenutils.TokenOk {
+		errCode = ERROR_CODE_TOKEN_EXPIRED
+		return
+	}
+
+	idList := strings.Split(idStr, ".")
+	if len(idList) < 1 {
+		errCode = ERROR_CODE_TOKEN_EXPIRED
+		return
+	}
+	id, err := strconv.ParseInt(idList[0], 10, 64)
+	if err != nil {
 		errCode = ERROR_CODE_TOKEN_EXPIRED
 		return
 	}

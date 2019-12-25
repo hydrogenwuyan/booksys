@@ -137,7 +137,7 @@ func (c *AdminControllers) Login() {
 	}
 
 	// 设置token
-	errCode := c.SetToken(adminEntity.Id)
+	errCode := c.SetToken(adminEntity.Id, IdentityAdmin)
 	if errCode != ERROR_CODE_SUCCESS {
 		c.ErrorResponse(errCode)
 		return
@@ -168,7 +168,7 @@ func (c *AdminControllers) Login() {
 func (c *AdminControllers) MyInfo() {
 	id, errCode := c.ParseToken()
 	if errCode != ERROR_CODE_SUCCESS {
-		c.ErrorResponse(ERROR_CODE_ERROR)
+		c.ErrorResponse(errCode)
 		return
 	}
 
@@ -206,7 +206,7 @@ func (c *AdminControllers) MyInfo() {
 	}
 
 	// 验证phone
-	if !logic.IsStringOrNum(reqMsg.Phone) {
+	if !logic.IsPhone(reqMsg.Phone) {
 		common.LogFuncError("check phone error: %v", reqMsg.Phone)
 		c.ErrorResponse(ERROR_CODE_ERROR)
 		return
@@ -240,7 +240,7 @@ func (c *AdminControllers) MyInfo() {
 func (c *AdminControllers) AddBook() {
 	_, errCode := c.ParseToken()
 	if errCode != ERROR_CODE_SUCCESS {
-		c.ErrorResponse(ERROR_CODE_ERROR)
+		c.ErrorResponse(errCode)
 		return
 	}
 

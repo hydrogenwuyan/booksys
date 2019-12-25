@@ -53,7 +53,7 @@ func (dao *AdminDao) Create(user string, pass string) (err error) {
 		Name:       "",
 		CreateTime: timeutils.Now(),
 	}
-	_, err = AdminDaoEntity.orm.Insert(admin)
+	_, err = dao.orm.Insert(admin)
 	if err != nil {
 		common.LogFuncError("adminDao create, error: %v", err)
 		return
