@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"project/booksys/common"
@@ -12,7 +11,6 @@ import (
 )
 
 const (
-	MaxBorrowNum = 6  // 最大借阅数量
 	MaxBorrowDay = 30 // 最大借阅天数
 )
 
@@ -75,15 +73,7 @@ func (c *StudentControllers) Register() {
 	}
 
 	// 创建学生数据
-	info := make([]*dao.BorrowInfo, 0, 8)
-	data, err := json.Marshal(&info)
-	if err != nil {
-		common.LogFuncError("marshal error: %v", err)
-		c.ErrorResponse(ERROR_CODE_ERROR)
-		return
-	}
-
-	err = dao.StudentDaoEntity.Create(reqMsg.User, string(pass), string(data))
+	err = dao.StudentDaoEntity.Create(reqMsg.User, string(pass))
 	if err != nil {
 		c.ErrorResponse(ERROR_CODE_DB_ERROR)
 		return
@@ -150,33 +140,22 @@ func (c *StudentControllers) Login() {
 		return
 	}
 
-	// 反序列化出借阅信息
-	info := make([]*dao.BorrowInfo, 0, 8)
-	err = json.Unmarshal([]byte(stuEntity.BorrowInfo), &info)
-	if err != nil {
-		common.LogFuncError("unmarshal error: %v", err)
-		c.ErrorResponse(ERROR_CODE_ERROR)
-		return
-	}
-
 	type respMsg struct {
-		Id         string            `json:"id"`
-		User       string            `json:"user"`
-		Sex        int8              `json:"sex"`
-		Age        int8              `json:"age"`
-		Phone      string            `json:"phone"`
-		Name       string            `json:"name"`
-		BorrowInfo []*dao.BorrowInfo `json:"borrowInfo"`
+		Id    string `json:"id"`
+		User  string `json:"user"`
+		Sex   int8   `json:"sex"`
+		Age   int8   `json:"age"`
+		Phone string `json:"phone"`
+		Name  string `json:"name"`
 	}
 
 	resp := &respMsg{
-		Id:         fmt.Sprintf("%d", stuEntity.Id),
-		User:       stuEntity.User,
-		Sex:        stuEntity.Sex,
-		Age:        stuEntity.Age,
-		Phone:      stuEntity.Phone,
-		Name:       stuEntity.Name,
-		BorrowInfo: info,
+		Id:    fmt.Sprintf("%d", stuEntity.Id),
+		User:  stuEntity.User,
+		Sex:   stuEntity.Sex,
+		Age:   stuEntity.Age,
+		Phone: stuEntity.Phone,
+		Name:  stuEntity.Name,
 	}
 
 	c.SuccessResponse(resp)

@@ -20,10 +20,10 @@ func init() {
 			beego.NSRouter("/add_book", &controllers.AdminControllers{}, "post:AddBook"),
 			//// 查看学生当前借阅信息
 			//beego.NSRouter("/borrowinfo", &controllers.AdminControllers{}, "get:BorrowInfo"),
-			//// 查看黑名单中的学生
-			//beego.NSRouter("/stublacklist", &controllers.AdminControllers{}, "get:StuBlackList"),
-			//// 从黑名单删除学生
-			//beego.NSRouter("/stublacklistdel", &controllers.AdminControllers{}, "post:StuBlackListDel"),
+			// 查看黑名单中的学生
+			beego.NSRouter("/stublacklist", &controllers.AdminControllers{}, "get:StuBlackList"),
+			// 从黑名单删除学生
+			beego.NSRouter("/stublacklistdel", &controllers.AdminControllers{}, "post:StuBlackListDel"),
 		),
 		beego.NSNamespace("/book",
 			// 根据书名查询图书信息

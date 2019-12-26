@@ -279,3 +279,38 @@ func (c *AdminControllers) AddBook() {
 
 	c.SuccessResponseWithoutData()
 }
+
+// 黑名单中的学生信息
+func (c AdminControllers) StuBlackList() {
+	_, errCode := c.ParseToken(IdentityAdmin)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
+
+	list, err := dao.StudentDaoEntity.List()
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	c.SuccessResponse(list)
+}
+
+// 把学生从黑名单删除
+func (c AdminControllers) StuBlackListDel() {
+	_, errCode := c.ParseToken(IdentityAdmin)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
+
+	stuUser := c.GetString("user")
+	errCode = logic.DeleteStudentByBlackList(stuUser)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
+
+	c.SuccessResponseWithoutData()
+}
