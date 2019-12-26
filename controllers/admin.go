@@ -281,7 +281,7 @@ func (c *AdminControllers) AddBook() {
 }
 
 // 黑名单中的学生信息
-func (c AdminControllers) StuBlackList() {
+func (c *AdminControllers) StuBlackList() {
 	_, errCode := c.ParseToken(IdentityAdmin)
 	if errCode != ERROR_CODE_SUCCESS {
 		c.ErrorResponse(errCode)
@@ -298,7 +298,7 @@ func (c AdminControllers) StuBlackList() {
 }
 
 // 把学生从黑名单删除
-func (c AdminControllers) StuBlackListDel() {
+func (c *AdminControllers) StuBlackListDel() {
 	_, errCode := c.ParseToken(IdentityAdmin)
 	if errCode != ERROR_CODE_SUCCESS {
 		c.ErrorResponse(errCode)
@@ -313,4 +313,21 @@ func (c AdminControllers) StuBlackListDel() {
 	}
 
 	c.SuccessResponseWithoutData()
+}
+
+func (c *AdminControllers) BorrowInfo() {
+	_, errCode := c.ParseToken(IdentityAdmin)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
+
+	stuUser := c.GetString("user")
+
+	_, bookList, err := dao.BookDaoEntity.FetchByStuUser(stuUser)
+	if err != nil {
+		return
+	}
+
+	c.SuccessResponse(bookList)
 }

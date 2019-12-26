@@ -163,7 +163,75 @@ func (c *StudentControllers) Login() {
 
 // 填写信息
 func (c *StudentControllers) MyInfo() {
+	id, errCode := c.ParseToken(IdentityStudent)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
 
+	type ReqMsg struct {
+		Sex   int8   `json:"sex"`
+		Age   int8   `json:"age"`
+		Name  string `json:"name"`
+		Phone string `json:"phone"`
+	}
+
+	reqMsg := &ReqMsg{}
+	err := c.GetPost(reqMsg)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 验证sex
+	if !dao.SexType(reqMsg.Sex).Valid() {
+		common.LogFuncWarning("sex warn: %v", reqMsg.Sex)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 验证name
+	if !logic.IsStringOrNum(reqMsg.Name) {
+		common.LogFuncError("check name error: %v", reqMsg.Name)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+	if len(reqMsg.Name) > NameMaxLen {
+		common.LogFuncWarning("check name warn: %v", reqMsg.Name)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	// 验证phone
+	if !logic.IsPhone(reqMsg.Phone) {
+		common.LogFuncError("check phone error: %v", reqMsg.Phone)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+	if len(reqMsg.Phone) > PhoneMaxLen {
+		common.LogFuncWarning("check phone warn: %v", reqMsg.Phone)
+		c.ErrorResponse(ERROR_CODE_ERROR)
+		return
+	}
+
+	entity, err := dao.StudentDaoEntity.Info(id)
+	if err != nil || entity.Id == 0 {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	// 更新数据
+	entity.Sex = reqMsg.Sex
+	entity.Age = reqMsg.Age
+	entity.Name = reqMsg.Name
+	entity.Phone = reqMsg.Phone
+	err = dao.StudentDaoEntity.Update(entity)
+	if err != nil {
+		c.ErrorResponse(ERROR_CODE_DB_ERROR)
+		return
+	}
+
+	c.SuccessResponseWithoutData()
 }
 
 // 借书
@@ -241,4 +309,19 @@ func (c *StudentControllers) GiveBack() {
 	}
 
 	c.SuccessResponseWithoutData()
+}
+
+func (c *StudentControllers) BorrowInfo() {
+	stuId, errCode := c.ParseToken(IdentityStudent)
+	if errCode != ERROR_CODE_SUCCESS {
+		c.ErrorResponse(errCode)
+		return
+	}
+
+	_, bookList, err := dao.BookDaoEntity.FetchByStuId(stuId)
+	if err != nil {
+		return
+	}
+
+	c.SuccessResponse(bookList)
 }

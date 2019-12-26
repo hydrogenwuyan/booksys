@@ -18,8 +18,8 @@ func init() {
 			beego.NSRouter("/myinfo", &controllers.AdminControllers{}, "post:MyInfo"),
 			// 添加图书
 			beego.NSRouter("/add_book", &controllers.AdminControllers{}, "post:AddBook"),
-			//// 查看学生当前借阅信息
-			//beego.NSRouter("/borrowinfo", &controllers.AdminControllers{}, "get:BorrowInfo"),
+			// 查看学生当前借阅信息
+			beego.NSRouter("/borrowinfo", &controllers.AdminControllers{}, "get:BorrowInfo"),
 			// 查看黑名单中的学生
 			beego.NSRouter("/stublacklist", &controllers.AdminControllers{}, "get:StuBlackList"),
 			// 从黑名单删除学生
@@ -44,8 +44,8 @@ func init() {
 			beego.NSRouter("/borrow", &controllers.StudentControllers{}, "post:Borrow"),
 			// 学生还书
 			beego.NSRouter("/give_back", &controllers.StudentControllers{}, "post:GiveBack"),
-			//// 查看当前借阅信息
-			//beego.NSRouter("/borrowinfo", &controllers.StudentControllers{}, "get:BorrowInfo"),
+			// 查看当前借阅信息
+			beego.NSRouter("/borrowinfo", &controllers.StudentControllers{}, "get:BorrowInfo"),
 			//// 续借
 			//beego.NSRouter("/borrowagain", &controllers.StudentControllers{}, "post:BorrowAgain"),
 		),
