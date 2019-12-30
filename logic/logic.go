@@ -55,17 +55,6 @@ func BorrowBook(stuId, bookId int64, day int8) (errCode ERROR_CODE) {
 		return
 	}
 
-	// 取图书数据
-	bookEntity, err := dao.BookDaoEntity.FetchByIdAndIsBorrow(bookId, dao.BookNotIsBorrow)
-	if err != nil {
-		errCode = ERROR_CODE_DB_ERROR
-		return
-	}
-	if bookEntity.Id == 0 {
-		errCode = ERROR_CODE_BOOK_NOT_EXIST
-		return
-	}
-
 	// 加锁
 	bookKey := fmt.Sprintf("borrow.%d", bookId)
 	val := common.RedisClient.Incr(bookKey).Val()
@@ -83,6 +72,17 @@ func BorrowBook(stuId, bookId int64, day int8) (errCode ERROR_CODE) {
 	defer func() {
 		common.RedisClient.Del(bookKey)
 	}()
+
+	// 取图书数据
+	bookEntity, err := dao.BookDaoEntity.FetchByIdAndIsBorrow(bookId, dao.BookNotIsBorrow)
+	if err != nil {
+		errCode = ERROR_CODE_DB_ERROR
+		return
+	}
+	if bookEntity.Id == 0 {
+		errCode = ERROR_CODE_BOOK_NOT_EXIST
+		return
+	}
 
 	// 更新图书信息
 	bookEntity.ExpireTime = timeutils.Now() + int64(time.Hour/time.Millisecond)*24*int64(day)
